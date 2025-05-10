@@ -57,9 +57,10 @@ end
 function gameMgr:startTimer()
     cs_coroutine.start(function()
 
+        -- 定时器，停了再生成呢。
         for i=1,height do
             self:createRow();
-            coroutine.yield(CS.UnityEngine.WaitForSeconds(3))
+            coroutine.yield(CS.UnityEngine.WaitForSeconds(2))
             if(changeNum<height)then
                 changeNum=changeNum+1;
             end
@@ -116,12 +117,14 @@ function gameMgr:startFill(num)
 
         cs_coroutine.start(function()
             coroutine.yield(CS.UnityEngine.WaitForSeconds(0.5));
-            mapData[changeNum]={};
+            mapData[changeNum]={0,0,0,0,0};
             self:realDrawMap();
             coroutine.yield(CS.UnityEngine.WaitForSeconds(0.5));
+
             if(changeNum>0)then
                 changeNum=changeNum-1;
             end
+
         end);
     end
 end
