@@ -1,0 +1,47 @@
+local GamePanel = require("game1.ui.GamePanel");
+local ver = require("game1.config.version");
+
+---@class gameMgr
+local gameMgr = class("gameMgr");
+
+
+---@type GamePanel
+local gamePanel;
+
+function gameMgr:ctor()
+end
+
+function gameMgr:awake()
+    if (not G1) then
+        G1 = self;
+    end
+    print("gameMgr awake！ others is ", G1, self, gameMgr,ver.ver);
+
+    self.gameState = GAME_State.null;
+end
+
+function gameMgr:start()
+    gamePanel = GamePanel.inst;--G1是gameMgr的单例，GamePanel.inst是ins面板点了之后的单例。
+
+    print("gameMgr start！ inst is ", gamePanel);
+
+
+    cs_coroutine.start(function()
+        print('cs_coroutine test wait 5')
+        coroutine.yield(CS.UnityEngine.WaitForSeconds(2))
+        print('cs_coroutine test wait 5 over')
+    end)
+end
+
+function gameMgr:update()
+end
+
+function gameMgr:switchState(game_state)
+    if (self.gameState ~= game_state) then
+        self.gameState = game_state;
+        evt.sendEvent(enumKit.numberToEnum(self.gameState), self.gameState);
+        print("now gameState is " .. enumKit.numberToEnum(GAME_State, self.gameState));
+    end
+end
+
+return gameMgr;

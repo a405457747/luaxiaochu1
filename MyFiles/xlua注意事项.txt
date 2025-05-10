@@ -1,0 +1,42 @@
+# xlua版本是xLua-2.1.16_with_ohos（版本号一样，但是ExampleGenConfig内容所谓没动的内容不一样了，估计作者后来改了，反正半年了还是这个版本号）
+# util和cs_coroutine放置了
+# 打包webgl过程中，webplugin改过3个地方，来自技术博客 https://blog.csdn.net/m0_37775797/article/details/137886279 （为了保持版本一直我又换回到之前的去了）
+# 改动ExampleGenConfig，添加一行using System.Reflection;
+# 改动ExampleConfig解开xlua自动配置标记。（只解开纯lua的，其中之前协程的类如果不手动添加是会报错，启动自动后，生成桥接代码后就不报错了，说明自动化配置生效了）而且的确有UnityEngineCoroutineWrap，LuaMonoHelperWrap也是有的，不用手动添加任何类库标记了
+# 生成的桥接代码1396行，手动注释掉//return new UnityEngine.Application.MemoryUsageChangedCallback(__Gen_Delegate_Imp20);
+# dotweenPro是最新版，它带来的侵入性Resources的DoTweenSettings和Plugins中的Demigiant
+# logview插件的侵入性是一个文件夹，以及StreamingAssets中build_info
+# 改动ExampleConfig文件的81行添加一行,"DG","DG.Tweening",。否则生成不了相应的wrap，无法调用doScale
+# 参考之前的MapleStory2_lua中的LuaManualConfig，只用到了DG命名空间，并且呢luacallsharp只有一处。
+# CSharpCallLua特性连命名空间都不用加了也是自动加。至于这个有没有对应的wrap生成我就不知道，因为action各种泛型些可以写在一个文件里面（的确是写在一个文件中了，就是注释的那个）
+# 自动生成的桥接文件类中很多不能用，打不了包。添加了两个地方都是很多行。这两个大地方有些不写估计也不会报错，但是我没有时间核对了，比如其中UnityEngine.Input。（配置参考MapleStory2项目中所有的ExampleConfig.cs）
+1. ExampleGenConfig的exclude
+        "UnityEngine.Microphone",
+        "ClusterSerialization",
+        "CanvasRenderer",
+        "AnimatorControllerParameter",
+        "Caching",//这个我allen用不到啊
+        "AudioSettings",
+        "LightingSettings",
+        "DrivenRectTransformTracker",
+        "LightProbeGroup",
+        "CloudStreaming",
+        "MeshRenderer",//这个allen我暂时用不到啊。
+        "UnityEngine.UI.DefaultControls", //allen认为这个是只读的后面都不用管了
+        "UnityEngine.UI.Graphic",
+        "UnityEngine.Input",////lua webgl不能用啊，可能要换unity版本。。。 只有这个文件是allen自定义的   1. 下面的黑名单没用啊，IsJoystickPreconfigured,这个很难搞，allen直接禁用Input  2. [userelection]标签的需要吗担心c++裁剪 3. 解决IsJoystickPreconfigured的问题要么挨个试把下面黑名单去掉试试，再把我的白名单安排上（如果实在没法解决，又要input性能的话）
+        "UnityEngine.AudioSource",
+        "UnityEngine.Material",
+        "UnityEngine.QualitySettings",
+        "UnityEngine.TextureMipmapLimitGroups",
+2. ExampleGenConfig的黑名单（黑名单很有可能解决的问题是打包要出错，但是平时还是有可能要用到的方法名字，和exclude整体删除可能是关联的
+        new List<string>() {"UnityEngine.Light", "shadowAngle"},
+        new List<string>() {"UnityEngine.Light", "shadowRadius"},
+        new List<string>() {"UnityEngine.Light", "SetLightDirty"},
+        new List<string>() {"UnityEngine.UI.Text", "OnRebuildRequested"},
+        new List<string>() {"UnityEngine.Texture", "imageContentsHash"},
+        new List<string>() {"UnityEngine.ParticleSystemForceField", "FindAll"},
+        new List<string>() {"UnityEngine.ParticleSystemRenderer", "supportsMeshInstancing"},
+
+
+
