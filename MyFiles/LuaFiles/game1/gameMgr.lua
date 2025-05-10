@@ -8,6 +8,9 @@ local gameMgr = class("gameMgr");
 ---@type GamePanel
 local gamePanel;
 
+local width =5;
+local height =10;
+local mapData ={}
 function gameMgr:ctor()
 end
 
@@ -25,12 +28,24 @@ function gameMgr:start()
 
     print("gameMgr start！ inst is ", gamePanel);
 
+    self:initMap();
 
-    cs_coroutine.start(function()
-        print('cs_coroutine test wait 5')
-        coroutine.yield(CS.UnityEngine.WaitForSeconds(2))
-        print('cs_coroutine test wait 5 over')
-    end)
+    self:drawMap();
+end
+
+function gameMgr:initMap()
+    for i=1,height do
+        local t ={}
+        for i=1,width do
+            t[i]=1;
+        end
+        mapData[i]=t;
+    end
+end
+
+function gameMgr:drawMap()
+
+    gamePanel:drawBlocks(mapData);
 end
 
 function gameMgr:update()

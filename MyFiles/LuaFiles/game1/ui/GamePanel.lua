@@ -12,6 +12,27 @@ end
 function GamePanel:awake()
     GamePanel.inst=self;
     print("GamePanel awake");
+    self.blocksGo=ue.findCompRecursion( self.trans,"blocksGo");
+    self.blockGo =ue.loadGo("Go/blockImage");
+end
+
+function GamePanel:drawBlocks(map)
+    local w=#map[1];
+    local h =#map;
+    for j=1,h do
+        for i=1,w do
+            local blockGo=  ue.generateGo(self.blockGo,self.blocksGo);
+            blockGo:GetComponent("RectTransform").anchoredPosition =Vector2((i-1)*100,(j-1)*100);
+
+
+            --local blockTable =CS.LuaMonoHelper.GetLuaComp(blockGo,require("game1.sys.blockItem"));
+            --print("blockTable",blockTable);
+            --blockTable:toggleImg(false);
+        end
+    end
+
+
+
 end
 
 
