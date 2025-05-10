@@ -19,20 +19,22 @@ end
 function GamePanel:drawBlocks(map)
     local w=#map[1];
     local h =#map;
+    local res ={};
     for j=1,h do
+        local t ={};
         for i=1,w do
             local blockGo=  ue.generateGo(self.blockGo,self.blocksGo);
             blockGo:GetComponent("RectTransform").anchoredPosition =Vector2((i-1)*100,(j-1)*100);
 
 
-            --local blockTable =CS.LuaMonoHelper.GetLuaComp(blockGo,require("game1.sys.blockItem"));
+            local blockTable =CS.LuaMonoHelper.GetLuaComp(blockGo,require("game1.sys.blockItem"));
             --print("blockTable",blockTable);
-            --blockTable:toggleImg(false);
+            t[i]=blockTable;
         end
+        res[j]=t;
     end
 
-
-
+    return res;
 end
 
 

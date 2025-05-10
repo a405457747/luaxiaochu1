@@ -10,11 +10,13 @@ function blockItem:ctor(sceName)
 
 end
 
-function blockItem:start()
+function blockItem:awake()
     self.img =self.go:GetComponent("Image");
-    print("self.img",self.img);
+    --print("self.img",self.img);
 end
 
 function blockItem:toggleImg(isShow)
-   -- self.img.enabled =isShow;
+   self.img.enabled =isShow;
 end
+
+return blockItem;
